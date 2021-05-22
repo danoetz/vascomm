@@ -10,7 +10,6 @@ part 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   LoginBloc() : super(LoginInitial());
 
-  @override
   LoginState get initialState => LoginInitial();
 
   @override
@@ -18,8 +17,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     if (event is LoginButtonPressed) {
       yield LoginInProgress();
       try {
-        var user =
-            await Future.delayed(Duration(seconds: 3)).then((value) => true);
+        var user = await Future.delayed(Duration(seconds: 3)).then((value) => true);
         if (user) {
           yield LoginSuccess(message: "Login berhasil");
         } else {
