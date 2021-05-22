@@ -31,19 +31,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _namaDepanController.dispose();
     _namaBelakangController.dispose();
     _noKtpController.dispose();

@@ -1,42 +1,44 @@
-import 'package:danoetz_vascomm/core/models/Product.dart';
-import 'package:danoetz_vascomm/core/models/TipeLayanan.dart';
+import 'dart:ui';
+
 import 'package:danoetz_vascomm/ui/login/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:danoetz_vascomm/core/models/Menu.dart';
-import 'package:danoetz_vascomm/core/repository/data.dart';
 import 'package:danoetz_vascomm/shared/helpers/helpers.dart';
 import 'package:danoetz_vascomm/shared/styles/colors.dart';
 import 'package:danoetz_vascomm/shared/widgets/widgets.dart';
 
-class HomeScreen extends StatefulWidget {
+class ProfileScreen extends StatefulWidget {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
   final globalKey = GlobalKey<ScaffoldState>();
-  final _searchController = TextEditingController();
+  final _formKey = GlobalKey<FormBuilderState>();
+  TabController _tabController;
 
-  List<Menu> listMenu = [];
-  List<Product> listProducts = [];
-  List<TipeLayanan> listTipeLayanan = [];
-  int _selectedMenu = 0;
+  final _namaDepanController = TextEditingController();
+  final _namaBelakangController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _noTelponController = TextEditingController();
+  final _noKtpController = TextEditingController();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    listMenu = Data().listMenu;
-    listProducts = Data().listProducts;
-    listTipeLayanan = Data().listTipeLayanan;
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    _searchController.dispose();
+    _tabController.dispose();
+    _namaDepanController.dispose();
+    _namaBelakangController.dispose();
+    _emailController.dispose();
+    _noTelponController.dispose();
+    _noKtpController.dispose();
     super.dispose();
   }
 
@@ -47,13 +49,13 @@ class _HomeScreenState extends State<HomeScreen> {
       key: globalKey,
       appBar: AppBar(
         leading: InkWell(
-          onTap: () => globalKey.currentState.openEndDrawer(),
+          onTap: () => Navigator.pop(context),
           child: Icon(
-            Icons.menu,
+            Icons.arrow_back,
             color: MyColors.primary,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           SvgPicture.asset('assets/icons/ic_cart.svg'),
@@ -82,781 +84,418 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      endDrawer: Drawer(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 85, horizontal: 50),
+      body: FormBuilder(
+        key: _formKey,
+        autovalidateMode: AutovalidateMode.disabled,
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/img_profile_pic.png'),
-                  ),
-                  SizedBox(width: 16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      RichText(
-                        textAlign: TextAlign.left,
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Angga, ',
-                              style: TextStyle(
-                                color: MyColors.primary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 14,
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Praja',
-                              style: TextStyle(color: MyColors.primary, fontWeight: FontWeight.w400, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                      ),
-                      CustomText(
-                        text: 'Membership BBLK',
-                        fontSize: 12,
-                        color: MyColors.textMediumGray,
-                        fontWeight: FontWeight.w600,
-                      )
-                    ],
-                  ),
-                ],
-              ),
               SizedBox(height: 40),
               Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      text: 'Profile Saya',
-                      fontSize: 11,
-                      color: MyColors.primary.withOpacity(0.5),
+                height: 41,
+                width: 261,
+                margin: EdgeInsets.symmetric(horizontal: 20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(
+                    25.0,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: TabBar(
+                    controller: _tabController,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25.0),
+                      color: MyColors.secondary,
+                    ),
+                    labelColor: MyColors.primary,
+                    unselectedLabelColor: MyColors.primary,
+                    labelStyle: TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.w600,
                     ),
-                    Icon(
-                      Icons.chevron_right,
-                      color: MyColors.darkGray,
+                    unselectedLabelStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
                     ),
-                  ],
+                    tabs: [
+                      Tab(text: 'Profile Saya'),
+                      Tab(text: 'Buy Now'),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomText(
-                    text: 'Pengaturan',
-                    fontSize: 11,
-                    color: MyColors.primary.withOpacity(0.5),
-                    fontWeight: FontWeight.w600,
-                  ),
-                  Icon(
-                    Icons.chevron_right,
-                    color: MyColors.darkGray,
-                  ),
-                ],
               ),
               SizedBox(height: 40),
-              RoundedFlatButton(
-                borderRadius: BorderRadius.circular(23),
-                width: double.infinity,
-                height: 28,
-                color: MyColors.red,
-                padding: EdgeInsets.symmetric(vertical: 7, horizontal: 50),
-                child: CustomText(
-                  text: 'Logout',
-                  color: MyColors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w400,
+              Card(
+                margin: EdgeInsets.all(20),
+                elevation: 7,
+                clipBehavior: Clip.hardEdge,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.0),
                 ),
-                onPressed: () {
-                  Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => LoginScreen(),
-                      ),
-                      (route) => false);
-                },
-              ),
-              SizedBox(height: 80),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CustomText(
-                    text: 'Ikuti kami di',
-                    fontSize: 16,
-                    color: MyColors.primary,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  SizedBox(width: 12),
-                  SvgPicture.asset('assets/icons/ic_facebook.svg'),
-                  SizedBox(width: 8),
-                  SvgPicture.asset('assets/icons/ic_instagram.svg'),
-                  SizedBox(width: 8),
-                  SvgPicture.asset('assets/icons/ic_twitter.svg'),
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-      body: Container(
-        height: SizeConfig.screenHeight,
-        width: SizeConfig.screenWidth,
-        child: ListView(
-          children: [
-            // CALENDER
-            SizedBox(height: 15),
-            Container(
-              height: 160,
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-                    child: Card(
+                child: Column(
+                  children: [
+                    Card(
                       elevation: 7,
                       clipBehavior: Clip.hardEdge,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
+                        borderRadius: BorderRadius.circular(20.0),
                       ),
-                      child: Container(
-                        height: 131,
-                        padding: EdgeInsets.all(15),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [Colors.white, MyColors.gradientBlue],
-                            stops: [0.6, 1.0],
+                      margin: EdgeInsets.zero,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 162,
+                            width: SizeConfig.screenWidth,
+                            decoration: BoxDecoration(
+                                color: MyColors.primary,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black12,
+                                    offset: const Offset(0.0, 1.5),
+                                    blurRadius: 1.0,
+                                    spreadRadius: -1.0,
+                                  )
+                                ]),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                RichText(
-                                  textAlign: TextAlign.left,
-                                  text: TextSpan(
+                          Positioned(
+                              right: -30, bottom: 10, child: SvgPicture.asset('assets/images/img_circle_subr.svg')),
+                          Positioned(
+                            bottom: 0,
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Color(
+                                  0xff1a3e78,
+                                ),
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(0),
+                                  bottomLeft: Radius.circular(20),
+                                  bottomRight: Radius.circular(20),
+                                ),
+                              ),
+                              child: CustomText(
+                                text: 'Lengkapi profile anda untuk memaksimalkan\npenggunaan aplikasi',
+                                color: MyColors.white,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+                              ),
+                            ),
+                          ),
+                          Positioned(right: 23, bottom: 45, child: SvgPicture.asset('assets/images/img_ornamen.svg')),
+                          Positioned(
+                            top: -277,
+                            left: -230,
+                            child: Container(
+                              height: 350,
+                              width: 350,
+                              decoration: BoxDecoration(
+                                color: Color(0xffd9c6b3).withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 37,
+                            left: 25,
+                            child: SizedBox(
+                              height: 40,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    padding: EdgeInsets.all(2),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child:
+                                        CircleAvatar(backgroundImage: AssetImage('assets/images/img_profile_pic.png')),
+                                  ),
+                                  SizedBox(width: 15),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                                     children: [
-                                      TextSpan(
-                                        text: 'Solusi, ',
-                                        style: TextStyle(
-                                          color: MyColors.title,
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18,
+                                      RichText(
+                                        textAlign: TextAlign.left,
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Angga, ',
+                                              style: TextStyle(
+                                                color: MyColors.white,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                            TextSpan(
+                                              text: 'Praja',
+                                              style: TextStyle(
+                                                  color: MyColors.white, fontWeight: FontWeight.w400, fontSize: 14),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      TextSpan(
-                                        text: 'Kesehatan Anda',
-                                        style:
-                                            TextStyle(color: MyColors.title, fontWeight: FontWeight.w800, fontSize: 18),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                CustomText(
-                                  text: 'Update informasi seputar kesehatan\nsemua bisa disini!',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: MyColors.subTitle,
-                                ),
-                                RaisedButton(
-                                  color: MyColors.primary,
-                                  elevation: 12,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-                                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                  clipBehavior: Clip.hardEdge,
-                                  child: Container(
-                                    height: 32,
-                                    width: 110,
-                                    child: Center(
-                                      child: CustomText(
-                                        text: "Selengkapnya",
-                                        color: Colors.white,
-                                        fontSize: 12.0,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(right: 20, child: SvgPicture.asset('assets/images/img_calender.svg')),
-                ],
-              ),
-            ),
-            // VACCINE
-            SizedBox(height: 27),
-            Container(
-              height: 160,
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-                    child: Card(
-                      elevation: 7,
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Container(
-                        height: 131,
-                        padding: EdgeInsets.all(15),
-                        child: Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomText(
-                                  text: 'Layanan Khusus',
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: MyColors.primary,
-                                ),
-                                CustomText(
-                                  text: 'Tes Covid 19, Cegah Corona\nSedini Mungkin',
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  color: MyColors.subTitle,
-                                ),
-                                InkWell(
-                                  onTap: () {},
-                                  child: Row(
-                                    children: [
                                       CustomText(
-                                        text: 'Daftar Tes',
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        color: MyColors.primary,
-                                        padding: EdgeInsets.only(right: 10),
-                                      ),
-                                      Icon(
-                                        Icons.arrow_forward,
-                                        color: MyColors.primary,
-                                        size: 14,
+                                        text: 'Membership BBLK',
+                                        fontSize: 12,
+                                        color: MyColors.textMediumGray,
+                                        fontWeight: FontWeight.w600,
                                       )
                                     ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(right: 45, child: SvgPicture.asset('assets/images/img_vaccine.svg')),
-                ],
-              ),
-            ),
-            // LOOP
-            SizedBox(height: 22),
-            Container(
-              height: 160,
-              child: Stack(
-                children: [
-                  Container(
-                    padding: EdgeInsets.only(left: 20, right: 20, top: 30),
-                    child: Card(
-                      elevation: 7,
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Container(
-                        height: 131,
-                        padding: EdgeInsets.all(15),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(left: 110.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  CustomText(
-                                    text: 'Track Pemeriksaan',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: MyColors.primary,
-                                  ),
-                                  CustomText(
-                                    text: 'Kamu dapat mengecek progress\npemeriksaanmu disini',
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w400,
-                                    color: MyColors.subTitle,
-                                  ),
-                                  InkWell(
-                                    onTap: () {},
-                                    child: Row(
-                                      children: [
-                                        CustomText(
-                                          text: 'Track',
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: MyColors.primary,
-                                          padding: EdgeInsets.only(right: 10),
-                                        ),
-                                        Icon(
-                                          Icons.arrow_forward,
-                                          color: MyColors.primary,
-                                          size: 14,
-                                        )
-                                      ],
-                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(left: 45, top: 20, child: SvgPicture.asset('assets/images/img_loop.svg')),
-                ],
-              ),
-            ),
-            // SEARCH
-            SizedBox(height: 27),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, right: 20.0),
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(shape: CircleBorder(), primary: Colors.white),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(shape: BoxShape.circle),
-                      child: Icon(
-                        Icons.menu,
-                        color: MyColors.primary,
-                      ),
-                    ),
-                    onPressed: () {},
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(
-                          30,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: MyColors.textLightGray,
-                            offset: Offset(0, 16),
-                            blurRadius: 24,
                           ),
                         ],
                       ),
-                      child: TextField(
-                        autocorrect: false,
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          hintText: 'Search',
-                          suffixIcon: Icon(
-                            Icons.search,
-                            color: MyColors.primary,
-                          ),
-                          hintStyle: TextStyle(color: MyColors.textHint),
-                          filled: true,
-                          fillColor: Colors.white70,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 24),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                            borderSide: BorderSide.none,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
-            // MENU
-            SizedBox(height: 40),
-            Container(
-              height: 30,
-              width: SizeConfig.screenWidth,
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: index == 0
-                        ? const EdgeInsets.only(left: 20.0)
-                        : (index == listMenu.length - 1 ? const EdgeInsets.only(right: 20.0) : EdgeInsets.zero),
-                    child: RoundedFlatButton(
-                      borderRadius: BorderRadius.circular(30),
-                      width: 86,
-                      height: 30,
-                      color: listMenu[_selectedMenu] == listMenu[index] ? MyColors.primary : MyColors.white,
-                      padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25),
-                        child: CustomText(
-                          text: listMenu[index].value,
-                          color: listMenu[_selectedMenu] == listMenu[index] ? MyColors.white : MyColors.primary,
-                          fontSize: 12,
-                          fontWeight: listMenu[_selectedMenu] == listMenu[index] ? FontWeight.w700 : FontWeight.w600,
+                    SizedBox(width: 15),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        CustomText(
+                          text: 'Pilih data yang ingin ditampilkan',
+                          color: MyColors.primary,
+                          fontWeight: FontWeight.w600,
+                          padding: EdgeInsets.only(left: 20, right: 20, top: 15),
                         ),
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _selectedMenu = index;
-                        });
-                      },
-                    ),
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: listMenu.length,
-              ),
-            ),
-            // PRODUCT
-            SizedBox(height: 26),
-            Container(
-              height: 180,
-              width: SizeConfig.screenWidth,
-              child: ListView.separated(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  Product item = listProducts[index];
-                  return Padding(
-                    padding: index == 0
-                        ? const EdgeInsets.only(left: 20.0)
-                        : (index == listProducts.length - 1 ? const EdgeInsets.only(right: 20.0) : EdgeInsets.zero),
-                    child: Card(
-                      elevation: 7,
-                      clipBehavior: Clip.hardEdge,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      child: Container(
-                        height: 176,
-                        width: 160,
-                        color: Colors.white,
-                        padding: EdgeInsets.all(10),
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Icon(Icons.star, color: MyColors.yellow, size: 20),
-                                SizedBox(width: 4),
-                                CustomText(
-                                  text: item.rating.toString(),
-                                  color: MyColors.textLightGray,
-                                  fontWeight: FontWeight.w600,
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 40),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: MyColors.secondary,
+                                  shape: BoxShape.circle,
                                 ),
-                              ],
-                            ),
-                            Image.asset(
-                              item.photo,
-                              width: 80,
-                              height: 80,
-                            ),
-                            SizedBox(height: 12),
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: CustomText(
-                                text: item.name,
-                                color: MyColors.primary,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 14,
+                                child: Icon(
+                                  Icons.location_history_rounded,
+                                  size: 20,
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                CustomText(
-                                  text: item.price,
-                                  color: MyColors.orange,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                ),
-                                Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 5, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: MyColors.green,
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: CustomText(
-                                    text: item.name,
-                                    color: MyColors.greenText,
+                              SizedBox(width: 12),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomText(
+                                    text: 'Data Diri',
+                                    color: MyColors.textBlack,
                                     fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                  CustomText(
+                                    text: 'Data diri anda sesuai KTP',
+                                    color: MyColors.textLight,
+                                    fontWeight: FontWeight.w400,
                                     fontSize: 10,
                                   ),
-                                )
-                              ],
+                                ],
+                              ),
+                              SizedBox(width: 20),
+                              Container(
+                                width: 36,
+                                height: 36,
+                                decoration: BoxDecoration(
+                                  color: MyColors.bgGray,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.location_pin,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomInputTextField(
+                          controller: _namaDepanController,
+                          name: 'namaDepan',
+                          label: 'Nama Depan',
+                          hintText: 'Jhon',
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 40),
+                        CustomInputTextField(
+                          controller: _namaBelakangController,
+                          name: 'namaBelakang',
+                          label: 'Nama Belakang',
+                          hintText: 'Doe',
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 40),
+                        CustomInputTextField(
+                          controller: _emailController,
+                          name: 'email',
+                          label: 'Email',
+                          hintText: 'Masukkan email anda',
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 40),
+                        CustomInputTextField(
+                          controller: _noTelponController,
+                          name: 'noTelpon',
+                          label: 'No. Telpon',
+                          hintText: 'Masukkan No. Telp anda',
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 40),
+                        CustomInputTextField(
+                          controller: _noKtpController,
+                          name: 'noKtp',
+                          label: 'No. KTP',
+                          hintText: 'Masukkan No. KTP anda',
+                          textInputAction: TextInputAction.next,
+                        ),
+                        SizedBox(height: 40),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.info,
+                                color: MyColors.primary,
+                                size: 16,
+                              ),
+                              SizedBox(width: 12),
+                              Expanded(
+                                child: CustomText(
+                                  text:
+                                      'Pastikan profile anda terisi dengan benar, data pribadi anda terjamin keamanannya',
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w400,
+                                  color: MyColors.textGray,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 34),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 20),
+                          child: RaisedButton(
+                            color: MyColors.primary,
+                            elevation: 16,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
                             ),
-                          ],
+                            child: SizedBox(
+                              height: 48,
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 63,
+                                    child: Center(
+                                      child: CustomText(
+                                        text: "Simpan Profile",
+                                        color: Colors.white,
+                                        fontSize: 16.0,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 10,
+                                    bottom: 10,
+                                    right: 12,
+                                    child: Icon(
+                                      Icons.save_outlined,
+                                      color: MyColors.white,
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            onPressed: () => Navigator.pop(context),
+                          ),
                         ),
-                      ),
+                        SizedBox(height: 30),
+                        SizedBox(height: 40),
+                      ],
                     ),
-                  );
-                },
-                separatorBuilder: (context, index) => SizedBox(width: 10),
-                itemCount: listProducts.length,
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            CustomText(
-              text: "Pilih Tipe Layanan Kesehatan Anda",
-              color: MyColors.primary,
-              fontWeight: FontWeight.w600,
-              padding: EdgeInsets.symmetric(horizontal: 20),
-            ),
-            SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                // direction: Axis.horizontal,
-                children: [
-                  Container(
-                    height: 28,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: MyColors.secondary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      child: Center(
-                        child: CustomText(
-                          text: 'Satuan',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: MyColors.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    height: 28,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      // color: MyColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      child: Center(
-                        child: CustomText(
-                          text: 'Paket Pemerikasaan',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: MyColors.primary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 20),
-
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: ListView.separated(
-                itemCount: listTipeLayanan.length,
-                shrinkWrap: true,
-                scrollDirection: Axis.vertical,
-                physics: NeverScrollableScrollPhysics(),
-                separatorBuilder: (context, index) => SizedBox(height: 30),
-                itemBuilder: (context, index) {
-                  TipeLayanan item = listTipeLayanan[index];
-                  return Card(
-                    elevation: 7,
-                    clipBehavior: Clip.hardEdge,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16.0),
-                    ),
-                    child: Container(
-                      height: 150,
-                      width: SizeConfig.screenWidth,
-                      color: Colors.white,
+              SizedBox(height: 77),
+              Container(
+                width: SizeConfig.screenWidth,
+                height: 107,
+                color: MyColors.primary,
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomText(
+                                text: "Ingin mendapat update",
+                                color: MyColors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              CustomText(
+                                text: "dari kami?",
+                                color: MyColors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ],
+                          ),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: item.name,
-                                        color: MyColors.primary,
-                                        fontWeight: FontWeight.w600,
+                                        text: "Dapatkan",
+                                        color: MyColors.white,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 14,
                                       ),
                                       CustomText(
-                                        text: item.result,
-                                        color: MyColors.primary,
-                                        fontWeight: FontWeight.w600,
+                                        text: "notifikasi",
+                                        color: MyColors.white,
+                                        fontWeight: FontWeight.w400,
                                         fontSize: 14,
                                       ),
                                     ],
                                   ),
-                                  CustomText(
-                                    text: item.price,
-                                    color: MyColors.orange,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset('assets/icons/ic_hospital.svg'),
-                                          SizedBox(width: 4),
-                                          CustomText(
-                                            text: item.building,
-                                            color: MyColors.textGray,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          SvgPicture.asset('assets/icons/ic_location.svg'),
-                                          SizedBox(width: 4),
-                                          CustomText(
-                                            text: item.address,
-                                            color: MyColors.textGray,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  SizedBox(width: 16),
+                                  Icon(
+                                    Icons.arrow_forward,
+                                    color: MyColors.white,
                                   ),
                                 ],
                               ),
-                            ),
-                          ),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Container(
-                              width: 119,
-                              height: 149,
-                              child: Image.asset(
-                                item.photo,
-                                width: 80,
-                                height: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  );
-                },
+                    SvgPicture.asset('assets/images/img_circle_sub.svg'),
+                    Positioned(right: 85, top: 18, child: SvgPicture.asset('assets/images/img_ornamen.svg')),
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 50),
-            Container(
-              width: SizeConfig.screenWidth,
-              height: 107,
-              color: MyColors.primary,
-              child: Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            CustomText(
-                              text: "Ingin mendapat update",
-                              color: MyColors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                            CustomText(
-                              text: "dari kami?",
-                              color: MyColors.white,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomText(
-                                      text: "Dapatkan",
-                                      color: MyColors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                    ),
-                                    CustomText(
-                                      text: "notifikasi",
-                                      color: MyColors.white,
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(width: 16),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: MyColors.white,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SvgPicture.asset('assets/images/img_circle_sub.svg'),
-                  Positioned(right: 85, top: 18, child: SvgPicture.asset('assets/images/img_ornamen.svg')),
-                ],
-              ),
-            ),
-            SizedBox(height: 50),
-          ],
+            ],
+          ),
         ),
       ),
     );

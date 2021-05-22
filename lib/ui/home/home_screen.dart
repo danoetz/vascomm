@@ -1,6 +1,7 @@
 import 'package:danoetz_vascomm/core/models/Product.dart';
 import 'package:danoetz_vascomm/core/models/TipeLayanan.dart';
 import 'package:danoetz_vascomm/ui/login/login_screen.dart';
+import 'package:danoetz_vascomm/ui/profile/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,9 +16,10 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
   final globalKey = GlobalKey<ScaffoldState>();
   final _searchController = TextEditingController();
+  TabController _tabController;
 
   List<Menu> listMenu = [];
   List<Product> listProducts = [];
@@ -26,16 +28,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     listMenu = Data().listMenu;
     listProducts = Data().listProducts;
     listTipeLayanan = Data().listTipeLayanan;
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _tabController.dispose();
     _searchController.dispose();
     super.dispose();
   }
@@ -53,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: MyColors.primary,
           ),
         ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         actions: [
           SvgPicture.asset('assets/icons/ic_cart.svg'),
@@ -129,20 +131,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomText(
-                        text: 'Profile Saya',
-                        fontSize: 11,
-                        color: MyColors.primary.withOpacity(0.5),
-                        fontWeight: FontWeight.w600,
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen()));
+                    },
+                    child: Container(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomText(
+                            text: 'Profile Saya',
+                            fontSize: 11,
+                            color: MyColors.primary.withOpacity(0.5),
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Icon(
+                            Icons.chevron_right,
+                            color: MyColors.darkGray,
+                          ),
+                        ],
                       ),
-                      Icon(
-                        Icons.chevron_right,
-                        color: MyColors.darkGray,
-                      ),
-                    ],
+                    ),
                   ),
                   SizedBox(height: 20),
                   Row(
@@ -227,6 +237,7 @@ class _HomeScreenState extends State<HomeScreen> {
         height: SizeConfig.screenHeight,
         width: SizeConfig.screenWidth,
         child: ListView(
+          physics: BouncingScrollPhysics(),
           children: [
             // CALENDER
             SizedBox(height: 15),
@@ -652,55 +663,42 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: EdgeInsets.symmetric(horizontal: 20),
             ),
             SizedBox(height: 20),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                // direction: Axis.horizontal,
-                children: [
-                  Container(
-                    height: 28,
-                    width: 100,
-                    decoration: BoxDecoration(
-                      color: MyColors.secondary,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      child: Center(
-                        child: CustomText(
-                          text: 'Satuan',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                          color: MyColors.primary,
-                        ),
-                      ),
-                    ),
+            Container(
+              height: 34,
+              width: 228,
+              margin: EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(
+                  25.0,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: TabBar(
+                  controller: _tabController,
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(25.0),
+                    color: MyColors.secondary,
                   ),
-                  Container(
-                    height: 28,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      // color: MyColors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 15),
-                      child: Center(
-                        child: CustomText(
-                          text: 'Paket Pemerikasaan',
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: MyColors.primary,
-                        ),
-                      ),
-                    ),
+                  labelColor: MyColors.primary,
+                  unselectedLabelColor: MyColors.primary,
+                  labelStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
+                  unselectedLabelStyle: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  tabs: [
+                    Tab(text: 'Satuan'),
+                    Tab(text: 'Paket Pemeriksaan'),
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 20),
-
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: ListView.separated(
@@ -875,7 +873,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            SizedBox(height: 50),
           ],
         ),
       ),
