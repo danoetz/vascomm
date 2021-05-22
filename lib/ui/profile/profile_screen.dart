@@ -86,137 +86,117 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 85, horizontal: 50),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
+              Row(
                 children: [
-                  Row(
+                  CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/img_profile_pic.png'),
+                  ),
+                  SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage('assets/images/img_profile_pic.png'),
-                      ),
-                      SizedBox(width: 16),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          RichText(
-                            textAlign: TextAlign.left,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Angga, ',
-                                  style: TextStyle(
-                                    color: MyColors.primary,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                TextSpan(
-                                  text: 'Praja',
-                                  style: TextStyle(color: MyColors.primary, fontWeight: FontWeight.w400, fontSize: 14),
-                                ),
-                              ],
+                      RichText(
+                        textAlign: TextAlign.left,
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'Angga, ',
+                              style: TextStyle(
+                                color: MyColors.primary,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 14,
+                              ),
                             ),
-                          ),
-                          CustomText(
-                            text: 'Membership BBLK',
-                            fontSize: 12,
-                            color: MyColors.textMediumGray,
-                            fontWeight: FontWeight.w600,
-                          )
-                        ],
+                            TextSpan(
+                              text: 'Praja',
+                              style: TextStyle(color: MyColors.primary, fontWeight: FontWeight.w400, fontSize: 14),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
                       CustomText(
-                        text: 'Profile Saya',
-                        fontSize: 11,
-                        color: MyColors.primary.withOpacity(0.5),
+                        text: 'Membership BBLK',
+                        fontSize: 12,
+                        color: MyColors.textMediumGray,
                         fontWeight: FontWeight.w600,
-                      ),
-                      Icon(
-                        Icons.chevron_right,
-                        color: MyColors.darkGray,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      CustomText(
-                        text: 'Pengaturan',
-                        fontSize: 11,
-                        color: MyColors.primary.withOpacity(0.5),
-                        fontWeight: FontWeight.w600,
-                      ),
-                      Icon(
-                        Icons.chevron_right,
-                        color: MyColors.darkGray,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 40),
-                  RoundedFlatButton(
-                    borderRadius: BorderRadius.circular(23),
-                    width: double.infinity,
-                    height: 28,
-                    color: MyColors.red,
-                    padding: EdgeInsets.symmetric(vertical: 7, horizontal: 50),
-                    child: CustomText(
-                      text: 'Logout',
-                      color: MyColors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
-                          ),
-                          (route) => false);
-                    },
-                  ),
-                  SizedBox(height: 80),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CustomText(
-                        text: 'Ikuti kami di',
-                        fontSize: 16,
-                        color: MyColors.primary,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      SizedBox(width: 12),
-                      SvgPicture.asset('assets/icons/ic_facebook.svg'),
-                      SizedBox(width: 8),
-                      SvgPicture.asset('assets/icons/ic_instagram.svg'),
-                      SizedBox(width: 8),
-                      SvgPicture.asset('assets/icons/ic_twitter.svg'),
+                      )
                     ],
                   ),
                 ],
               ),
+              SizedBox(height: 40),
+              Container(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomText(
+                      text: 'Profile Saya',
+                      fontSize: 11,
+                      color: MyColors.primary.withOpacity(0.5),
+                      fontWeight: FontWeight.w600,
+                    ),
+                    Icon(
+                      Icons.chevron_right,
+                      color: MyColors.darkGray,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   CustomText(
-                    text: 'FAQ',
-                    fontSize: 14,
-                    color: MyColors.textLightGray,
-                    fontWeight: FontWeight.w700,
+                    text: 'Pengaturan',
+                    fontSize: 11,
+                    color: MyColors.primary.withOpacity(0.5),
+                    fontWeight: FontWeight.w600,
                   ),
+                  Icon(
+                    Icons.chevron_right,
+                    color: MyColors.darkGray,
+                  ),
+                ],
+              ),
+              SizedBox(height: 40),
+              RoundedFlatButton(
+                borderRadius: BorderRadius.circular(23),
+                width: double.infinity,
+                height: 28,
+                color: MyColors.red,
+                padding: EdgeInsets.symmetric(vertical: 7, horizontal: 50),
+                child: CustomText(
+                  text: 'Logout',
+                  color: MyColors.white,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w400,
+                ),
+                onPressed: () {
+                  Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                      (route) => false);
+                },
+              ),
+              SizedBox(height: 80),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   CustomText(
-                    text: 'Terms and Conditions',
-                    fontSize: 14,
-                    color: MyColors.textLightGray,
-                    fontWeight: FontWeight.w700,
+                    text: 'Ikuti kami di',
+                    fontSize: 16,
+                    color: MyColors.primary,
+                    fontWeight: FontWeight.w500,
                   ),
+                  SizedBox(width: 12),
+                  SvgPicture.asset('assets/icons/ic_facebook.svg'),
+                  SizedBox(width: 8),
+                  SvgPicture.asset('assets/icons/ic_instagram.svg'),
+                  SizedBox(width: 8),
+                  SvgPicture.asset('assets/icons/ic_twitter.svg'),
                 ],
               )
             ],
