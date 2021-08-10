@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:danoetz_vascomm/core/blocs/login/login_bloc.dart';
 import 'package:danoetz_vascomm/shared/helpers/helpers.dart';
 import 'package:danoetz_vascomm/ui/home/home_screen.dart';
 import 'package:danoetz_vascomm/ui/register/register_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:danoetz_vascomm/shared/styles/styles.dart';
 import 'package:danoetz_vascomm/shared/widgets/widgets.dart';
@@ -51,196 +53,206 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Scaffold(
-      body: FormBuilder(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.disabled,
-        child: Container(
-          height: SizeConfig.screenHeight,
-          width: SizeConfig.screenWidth,
-          child: ListView(
-            physics: BouncingScrollPhysics(),
-            children: <Widget>[
-              SizedBox(height: 50),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                width: SizeConfig.screenWidth,
-                child: RichText(
-                  textAlign: TextAlign.left,
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Hai, ',
-                        style: TextStyle(
-                          color: MyColors.title,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 28,
-                        ),
-                      ),
-                      TextSpan(
-                        text: 'Selamat Datang\n',
-                        style: TextStyle(color: MyColors.title, fontWeight: FontWeight.w800, fontSize: 28),
-                      ),
-                      TextSpan(
-                        text: 'Silahkan login untuk melanjutkan',
-                        style: TextStyle(color: MyColors.subTitle, fontWeight: FontWeight.w600, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
+      body: BlocListener(
+        listener: (context, state) {
+          if (state is LoginSuccess) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomeScreen(),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ClipRect(
-                    clipBehavior: Clip.hardEdge,
-                    child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
-                        child: Image.asset(
-                          'assets/images/img_overview.png',
-                          width: SizeConfig.screenWidth * 0.9,
-                          fit: BoxFit.fitHeight,
-                        )),
-                  ),
-                ],
-              ),
-              CustomInputTextField(
-                controller: _emailController,
-                name: 'email',
-                label: 'Email',
-                hintText: 'Masukkan email anda',
-                textInputAction: TextInputAction.next,
-              ),
-              SizedBox(height: 40),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CustomText(
-                      text: 'Password',
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: MyColors.primary,
-                      padding: EdgeInsets.only(bottom: 16.0),
-                    ),
-                    CustomText(
-                      text: 'Lupa password Anda?',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: MyColors.subTitle,
-                      padding: EdgeInsets.only(bottom: 16.0),
-                    ),
-                  ],
-                ),
-              ),
-              CustomInputTextField(
-                controller: _passwordController,
-                name: 'password',
-                hintText: 'Masukkan password anda',
-                obscureText: _obscureText,
-                textInputAction: TextInputAction.done,
-                iconWidget: SvgPicture.asset(
-                  'assets/icons/ic_eye.svg',
-                  fit: BoxFit.scaleDown,
-                ),
-                onTap: _toggle,
-              ),
-              SizedBox(height: 40),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: RaisedButton(
-                  color: MyColors.primary,
-                  elevation: 12,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: SizedBox(
-                    height: 48,
-                    child: Stack(
+            );
+          }
+        },
+        child: FormBuilder(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.disabled,
+          child: Container(
+            height: SizeConfig.screenHeight,
+            width: SizeConfig.screenWidth,
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: <Widget>[
+                SizedBox(height: 50),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  width: SizeConfig.screenWidth,
+                  child: RichText(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(
                       children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 63,
-                          child: Center(
-                            child: CustomText(
-                              text: "Login",
-                              color: Colors.white,
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w600,
-                            ),
+                        TextSpan(
+                          text: 'Hai, ',
+                          style: TextStyle(
+                            color: MyColors.title,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 28,
                           ),
                         ),
-                        Positioned(
-                          top: 10,
-                          bottom: 10,
-                          right: 12,
-                          child: Icon(
-                            Icons.arrow_forward,
-                            color: MyColors.white,
-                          ),
-                        )
+                        TextSpan(
+                          text: 'Selamat Datang\n',
+                          style: TextStyle(color: MyColors.title, fontWeight: FontWeight.w800, fontSize: 28),
+                        ),
+                        TextSpan(
+                          text: 'Silahkan login untuk melanjutkan',
+                          style: TextStyle(color: MyColors.subTitle, fontWeight: FontWeight.w600, fontSize: 12),
+                        ),
                       ],
                     ),
                   ),
-                  onPressed: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  ),
                 ),
-              ),
-              SizedBox(height: 30),
-              Center(
-                child: RichText(
-                  text: TextSpan(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ClipRect(
+                      clipBehavior: Clip.hardEdge,
+                      child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+                          child: Image.asset(
+                            'assets/images/img_overview.png',
+                            width: SizeConfig.screenWidth * 0.9,
+                            fit: BoxFit.fitHeight,
+                          )),
+                    ),
+                  ],
+                ),
+                CustomInputTextField(
+                  controller: _emailController,
+                  name: 'email',
+                  label: 'Email',
+                  hintText: 'Masukkan email anda',
+                  textInputAction: TextInputAction.next,
+                ),
+                SizedBox(height: 40),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      TextSpan(
-                        text: 'Belum punya akun? ',
-                        style: TextStyle(
-                          color: MyColors.textLightGray,
-                          fontWeight: FontWeight.w400,
-                          fontSize: 14,
-                        ),
+                      CustomText(
+                        text: 'Password',
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: MyColors.primary,
+                        padding: EdgeInsets.only(bottom: 16.0),
                       ),
-                      TextSpan(
-                        text: 'Daftar sekarang\n',
-                        style: TextStyle(
-                          color: MyColors.title,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => RegisterScreen(),
-                              ),
-                            );
-                          },
+                      CustomText(
+                        text: 'Lupa password Anda?',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: MyColors.subTitle,
+                        padding: EdgeInsets.only(bottom: 16.0),
                       ),
                     ],
                   ),
                 ),
-              ),
-              SizedBox(height: 40),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.copyright_sharp, size: 12),
-                  CustomText(
-                    text: 'SILK. all right reserved.',
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: MyColors.textLightGray,
-                    padding: EdgeInsets.only(left: 8),
+                CustomInputTextField(
+                  controller: _passwordController,
+                  name: 'password',
+                  hintText: 'Masukkan password anda',
+                  obscureText: _obscureText,
+                  textInputAction: TextInputAction.done,
+                  iconWidget: SvgPicture.asset(
+                    'assets/icons/ic_eye.svg',
+                    fit: BoxFit.scaleDown,
                   ),
-                ],
-              ),
-              SizedBox(height: 40),
-            ],
+                  onTap: _toggle,
+                ),
+                SizedBox(height: 40),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: RaisedButton(
+                    color: MyColors.primary,
+                    elevation: 12,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: SizedBox(
+                      height: 48,
+                      child: Stack(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: 63,
+                            child: Center(
+                              child: CustomText(
+                                text: "Login",
+                                color: Colors.white,
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 10,
+                            bottom: 10,
+                            right: 12,
+                            child: Icon(
+                              Icons.arrow_forward,
+                              color: MyColors.white,
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    onPressed: () {
+                      BlocProvider.of<LoginBloc>(context)
+                        ..add(LoginButtonPressed(username: _emailController.text, password: _passwordController.text));
+                    },
+                  ),
+                ),
+                SizedBox(height: 30),
+                Center(
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'Belum punya akun? ',
+                          style: TextStyle(
+                            color: MyColors.textLightGray,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: 'Daftar sekarang\n',
+                          style: TextStyle(
+                            color: MyColors.title,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RegisterScreen(),
+                                ),
+                              );
+                            },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 40),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.copyright_sharp, size: 12),
+                    CustomText(
+                      text: 'SILK. all right reserved.',
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: MyColors.textLightGray,
+                      padding: EdgeInsets.only(left: 8),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 40),
+              ],
+            ),
           ),
         ),
       ),

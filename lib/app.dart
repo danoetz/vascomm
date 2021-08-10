@@ -1,3 +1,4 @@
+import 'package:danoetz_vascomm/core/blocs/login/login_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:danoetz_vascomm/shared/styles/styles.dart';
@@ -14,7 +15,10 @@ class App extends StatelessWidget {
       home: BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
           if (state is AuthenticationSuccess) {
-            return LoginScreen();
+            return BlocProvider<LoginBloc>(
+              create: (_) => LoginBloc()..add(LoginInit()),
+              child: LoginScreen(),
+            );
           } else if (state is AuthenticationFailure) {
             return Container();
           } else if (state is AuthenticationInProgress) {
